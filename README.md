@@ -234,7 +234,7 @@ TEXT "Welcome" AT 320,180 SIZE 48 COLOR #000000
 
 ## License
 
-This project is maintained as part of the AnveshAI initiative.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Support
 
