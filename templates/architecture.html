@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnveshAI - Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3f 100%);
+            color: #e0e0ff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #b494ff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(180, 148, 255, 0.5);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #999;
+            margin-bottom: 50px;
+            font-size: 1.1em;
+        }
+        
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .component {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid #7c3aed;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .component:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4);
+            border-color: #a78bfa;
+        }
+        
+        .component h3 {
+            color: #a78bfa;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .component p {
+            color: #c0c0ff;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+        
+        .component ul {
+            list-style: none;
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .component li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .component li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #7c3aed;
+        }
+        
+        .data-flow {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid #06b6d4;
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(6, 182, 212, 0.2);
+        }
+        
+        .data-flow h2 {
+            color: #06b6d4;
+            margin-bottom: 25px;
+            font-size: 1.6em;
+        }
+        
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 0.95em;
+        }
+        
+        .flow-step {
+            background: linear-gradient(135deg, #2d1b4e 0%, #1a0f2e 100%);
+            border: 1px solid #7c3aed;
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #c0c0ff;
+            font-weight: 500;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .flow-arrow {
+            color: #06b6d4;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .stack {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.2);
+        }
+        
+        .stack h2 {
+            color: #f59e0b;
+            margin-bottom: 25px;
+            font-size: 1.6em;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .tech-item {
+            background: linear-gradient(135deg, #2d1b0b 0%, #1a0f07 100%);
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .tech-item strong {
+            color: #f59e0b;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .tech-item span {
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .security-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
+        }
+        
+        .security-box h2 {
+            color: #10b981;
+            margin-bottom: 25px;
+            font-size: 1.6em;
+        }
+        
+        .security-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .security-item {
+            background: linear-gradient(135deg, #0b2417 0%, #071410 100%);
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .security-item strong {
+            color: #10b981;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .security-item span {
+            color: #999;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 30px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-button">← Back to Generator</a>
+        
+        <h1>🏗️ AnveshAI System Architecture</h1>
+        <p class="subtitle">Secure Programmatic Video Generation Pipeline</p>
+        
+        <!-- Architecture Diagram -->
+        <div style="margin-bottom: 50px; text-align: center;">
+            <img src="/static/architecture-diagram.png" alt="AnveshAI System Architecture Diagram" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3); border: 2px solid #7c3aed;">
+        </div>
+        
+        <!-- Core Components -->
+        <div class="architecture-grid">
+            <div class="component">
+                <h3>🌐 Frontend</h3>
+                <p>Interactive web UI for video generation</p>
+                <ul>
+                    <li>Prompt-based input mode</li>
+                    <li>DSL code editor</li>
+                    <li>Model selection dropdown</li>
+                    <li>Real-time video preview</li>
+                    <li>Model status indicators</li>
+                    <li>Dark gradient theme</li>
+                </ul>
+            </div>
+            
+            <div class="component">
+                <h3>⚙️ FastAPI Backend</h3>
+                <p>Central API server with full CRUD operations</p>
+                <ul>
+                    <li>POST /generate - prompt to video</li>
+                    <li>POST /generate-dsl - DSL to video</li>
+                    <li>GET /gallery - video gallery page</li>
+                    <li>GET /api/videos - list all videos</li>
+                    <li>GET /models - available AI models</li>
+                    <li>DELETE /api/videos/{id}</li>
+                </ul>
+            </div>
+            
+            <div class="component">
+                <h3>🎬 Video Engine</h3>
+                <p>Orchestrates the entire generation pipeline</p>
+                <ul>
+                    <li>DSL Parser - validates syntax</li>
+                    <li>LLM Translator - converts prompts</li>
+                    <li>Renderer - PIL frame generation</li>
+                    <li>Pipeline - orchestrates workflow</li>
+                    <li>Database - stores video metadata</li>
+                </ul>
+            </div>
+            
+            <div class="component">
+                <h3>🤖 AI Models</h3>
+                <p>Multi-model LLM integration with fallback</p>
+                <ul>
+                    <li><strong>Groq:</strong> Llama 4 Maverick</li>
+                    <li><strong>OpenAI:</strong> GPT-4o</li>
+                    <li><strong>Fallback:</strong> Template-based</li>
+                    <li>Auto model selection</li>
+                    <li>API key detection</li>
+                </ul>
+            </div>
+            
+            <div class="component">
+                <h3>💾 Storage</h3>
+                <p>SQLite database with full metadata</p>
+                <ul>
+                    <li>VideoMetadata ORM model</li>
+                    <li>Video base64 storage</li>
+                    <li>Prompt & DSL preservation</li>
+                    <li>Model tracking</li>
+                    <li>Timestamp logging</li>
+                </ul>
+            </div>
+            
+            <div class="component">
+                <h3>🔒 Security</h3>
+                <p>Production-safe execution environment</p>
+                <ul>
+                    <li>No Python code execution</li>
+                    <li>DSL-only approach</li>
+                    <li>Whitelist command validation</li>
+                    <li>Resource limit enforcement</li>
+                    <li>Color & coordinate validation</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Data Flow -->
+        <div class="data-flow">
+            <h2>📊 Video Generation Data Flow</h2>
+            <div class="flow-diagram">
+                <div class="flow-step">Natural Language Prompt</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">LLM Translator (Groq/OpenAI)</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Mini-DSL Code</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">DSL Parser</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">AST Commands</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">PIL Renderer</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">Frame Buffer</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">imageio-ffmpeg</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">MP4 Video</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">SQLite DB</div>
+            </div>
+        </div>
+        
+        <!-- Tech Stack -->
+        <div class="stack">
+            <h2>🛠️ Technology Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <strong>Backend Framework</strong>
+                    <span>FastAPI 0.109+</span>
+                </div>
+                <div class="tech-item">
+                    <strong>Video Rendering</strong>
+                    <span>Pillow + imageio-ffmpeg</span>
+                </div>
+                <div class="tech-item">
+                    <strong>Data Processing</strong>
+                    <span>NumPy + SQLAlchemy ORM</span>
+                </div>
+                <div class="tech-item">
+                    <strong>Database</strong>
+                    <span>SQLite 3</span>
+                </div>
+                <div class="tech-item">
+                    <strong>AI Integration</strong>
+                    <span>OpenAI SDK + Groq API</span>
+                </div>
+                <div class="tech-item">
+                    <strong>Configuration</strong>
+                    <span>python-dotenv + Replit Secrets</span>
+                </div>
+                <div class="tech-item">
+                    <strong>Frontend</strong>
+                    <span>Vanilla HTML/CSS/JavaScript</span>
+                </div>
+                <div class="tech-item">
+                    <strong>Server</strong>
+                    <span>Uvicorn ASGI</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Model -->
+        <div class="security-box">
+            <h2>🔐 Security & Resource Limits</h2>
+            <div class="security-items">
+                <div class="security-item">
+                    <strong>Code Execution</strong>
+                    <span>No Python code execution allowed. Only safe DSL commands executed through strict whitelist.</span>
+                </div>
+                <div class="security-item">
+                    <strong>Command Whitelist</strong>
+                    <span>BACKGROUND, TEXT, SHAPE, MOVE, FPS, DURATION only. No arbitrary commands permitted.</span>
+                </div>
+                <div class="security-item">
+                    <strong>Resolution Limit</strong>
+                    <span>Maximum 1280×720 pixels. Prevents resource exhaustion from massive canvases.</span>
+                </div>
+                <div class="security-item">
+                    <strong>Duration Limit</strong>
+                    <span>Maximum 6 seconds per video. Prevents long-running generation processes.</span>
+                </div>
+                <div class="security-item">
+                    <strong>Frame Limit</strong>
+                    <span>Maximum 300 frames total (24 FPS × 12.5 sec buffer). Bounds memory usage.</span>
+                </div>
+                <div class="security-item">
+                    <strong>Object Limit</strong>
+                    <span>Maximum 50 simultaneous objects. Prevents memory exhaustion from large scenes.</span>
+                </div>
+                <div class="security-item">
+                    <strong>Color Validation</strong>
+                    <span>Only hex format #RRGGBB accepted. Prevents injection attacks.</span>
+                </div>
+                <div class="security-item">
+                    <strong>Coordinate Bounds</strong>
+                    <span>All positions automatically clamped to canvas size. No out-of-bounds rendering.</span>
+                </div>
+                <div class="security-item">
+                    <strong>Timeout Protection</strong>
+                    <span>30-second render timeout prevents infinite loops and hanging processes.</span>
+                </div>
+                <div class="security-item">
+                    <strong>Secret Management</strong>
+                    <span>API keys stored as encrypted Replit Secrets. Never exposed in logs or responses.</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mini-DSL Reference -->
+        <div class="component" style="margin-top: 30px;">
+            <h3>📝 Mini-DSL Command Reference</h3>
+            <p style="margin-bottom: 20px;"><strong>Syntax for safe, validated video generation:</strong></p>
+            <code style="display: block; background: #0f0f1e; padding: 20px; border-radius: 8px; border-left: 3px solid #7c3aed; color: #06b6d4; font-family: 'Courier New', monospace; line-height: 1.8; font-size: 0.9em;">
+BACKGROUND #1a1a2e<br>
+TEXT "Hello" AT 100,100 SIZE 32 COLOR #FFFFFF [MOVE TO 200,200 DUR 2]<br>
+SHAPE CIRCLE ID ball AT 100,200 RADIUS 30 COLOR #FF0000 [MOVE TO 500,200 DUR 3 EASE linear]<br>
+SHAPE RECT ID box AT 50,50 WIDTH 100 HEIGHT 100 COLOR #00FF00 [MOVE TO 300,300 DUR 2]<br>
+MOVE ball TO 600,300 DUR 2 EASE linear<br>
+FPS 24<br>
+DURATION 3
+            </code>
+            <p style="margin-top: 15px; color: #999;"><strong>Color Examples:</strong> #FF0000 (red), #00FF00 (green), #0000FF (blue), #FFFF00 (yellow), #FFFFFF (white), #000000 (black)</p>
+        </div>
+    </div>
+</body>
+</html>

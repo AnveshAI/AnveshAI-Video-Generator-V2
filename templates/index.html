@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnveshAI Video Generator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <div>
+                    <h1>AnveshAI Video Generator</h1>
+                    <p class="subtitle">Create animated videos from natural language prompts</p>
+                </div>
+                <a href="/architecture" style="padding: 8px 16px; background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); color: white; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 0.9em;">📐 Architecture</a>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="panel">
+                <h2>Create Animation</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" data-tab="promptTab">Prompt</button>
+                    <button class="tab" data-tab="dslTab">DSL Code</button>
+                </div>
+                
+                <div id="promptTab" class="tab-content active">
+                    <div class="form-group">
+                        <label for="prompt">Describe your animation</label>
+                        <textarea id="prompt" placeholder="e.g., A bouncing red ball moving across the screen with 'Hello World' text"></textarea>
+                    </div>
+                    
+                    <div class="controls-row">
+                        <div class="form-group">
+                            <label for="duration">Duration (s)</label>
+                            <input type="number" id="duration" value="3" min="0.5" max="6" step="0.5">
+                        </div>
+                        <div class="form-group">
+                            <label for="fps">FPS</label>
+                            <input type="number" id="fps" value="24" min="1" max="24">
+                        </div>
+                        <div class="form-group">
+                            <label for="model">AI Model</label>
+                            <select id="model">
+                                <option value="auto">Auto (Best Available)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="generateBtn" class="btn btn-primary">
+                        Generate Video
+                    </button>
+                </div>
+                
+                <div id="dslTab" class="tab-content">
+                    <div class="form-group">
+                        <label for="dslInput">DSL Animation Script</label>
+                        <textarea id="dslInput" rows="10" placeholder="Example DSL (replace with your own):&#10;BACKGROUND #1a1a2e&#10;FPS 24&#10;DURATION 3&#10;SHAPE CIRCLE ID ball AT 50,180 RADIUS 30 COLOR #FF4444 MOVE TO 550,180 DUR 3 EASE linear&#10;TEXT &quot;Hello World&quot; AT 220,50 SIZE 36 COLOR #FFFFFF"></textarea>
+                    </div>
+                    
+                    <button id="generateDslBtn" class="btn btn-primary">
+                        Generate from DSL
+                    </button>
+                </div>
+                
+                <div class="status-bar">
+                    <div class="status-indicator">
+                        <span class="status-dot" id="groqStatus"></span>
+                        <span>Groq/Llama 4</span>
+                    </div>
+                    <div class="status-indicator">
+                        <span class="status-dot" id="openaiStatus"></span>
+                        <span>OpenAI</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>Preview</h2>
+                
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Generating your animation...</p>
+                </div>
+                
+                <div id="error" class="error"></div>
+                
+                <div id="videoContainer" class="video-container">
+                    <div class="placeholder">
+                        <div class="placeholder-icon">🎬</div>
+                        <p>Your generated video will appear here</p>
+                    </div>
+                </div>
+                
+                <div id="dslPreview" class="dsl-preview" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Powered by Llama 4 Maverick via Groq | Built with FastAPI + PIL</p>
+            <p><a href="/gallery">View Gallery</a></p>
+        </footer>
+    </div>
+    
+    <script src="/static/app.js"></script>
+</body>
+</html>

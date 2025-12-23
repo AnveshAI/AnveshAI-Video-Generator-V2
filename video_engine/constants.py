@@ -1,0 +1,22 @@
+MAX_WIDTH = 1280
+MAX_HEIGHT = 720
+MAX_DURATION = 6.0
+MAX_FPS = 24
+MAX_FRAMES = 300
+MAX_OBJECTS = 50
+RENDER_TIMEOUT = 30
+
+VALID_COLORS_PATTERN = r'^#[0-9A-Fa-f]{6}$'
+
+ALLOWED_COMMANDS = {
+    'BACKGROUND',
+    'TEXT',
+    'SHAPE',
+    'MOVE',
+    'FPS',
+    'DURATION',
+}
+
+ALLOWED_SHAPE_TYPES = {'CIRCLE', 'RECT'}
+
+ALLOWED_EASE_TYPES = {'linear', 'ease-in', 'ease-out'}

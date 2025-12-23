@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Gallery - AnveshAI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/videos.css">
+</head>
+<body>
+    <div class="videos-container">
+        <header>
+            <h1>Video Gallery</h1>
+            <p class="subtitle">All generated animations</p>
+            <p style="margin-top: 15px;"><a href="/" style="color: #8b5cf6; text-decoration: none;">← Back to Generator</a></p>
+        </header>
+        
+        <div id="videosGrid" class="videos-grid"></div>
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">🎬</div>
+            <p>No videos yet. <a href="/" style="color: #8b5cf6; text-decoration: none;">Create one!</a></p>
+        </div>
+    </div>
+    
+    <script>
+        async function loadVideos() {
+            try {
+                const response = await fetch('/api/videos');
+                const videos = await response.json();
+                
+                const grid = document.getElementById('videosGrid');
+                const emptyState = document.getElementById('emptyState');
+                
+                if (videos.length === 0) {
+                    grid.style.display = 'none';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+                
+                grid.innerHTML = videos.map(video => `
+                    <div class="video-card">
+                        <div class="video-card-preview">
+                            <video controls>
+                                <source src="data:video/mp4;base64,${video.video_base64}" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="video-card-info">
+                            <div class="video-card-title">${video.prompt || 'DSL Generated'}</div>
+                            <div class="video-card-details">
+                                <div>
+                                    <span class="video-card-badge">${video.model_used}</span>
+                                    <span class="video-card-badge">${video.duration}s @ ${video.fps}fps</span>
+                                </div>
+                                <div style="font-size: 0.8rem; color: #64748b;">
+                                    ${new Date(video.created_at).toLocaleString()}
+                                </div>
+                            </div>
+                            <div class="video-card-actions">
+                                <button class="btn-small btn-download" onclick="downloadVideo(${video.id}, '${(video.prompt || 'video').replace(/'/g, "\\'")}')">
+                                    Download
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteVideo(${video.id})">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Failed to load videos:', err);
+            }
+        }
+        
+        function downloadVideo(id, name) {
+            const link = document.createElement('a');
+            link.href = `/api/videos/${id}/download`;
+            link.download = `${name || 'video'}.mp4`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        async function deleteVideo(id) {
+            if (!confirm('Delete this video?')) return;
+            
+            try {
+                await fetch(`/api/videos/${id}`, { method: 'DELETE' });
+                loadVideos();
+            } catch (err) {
+                console.error('Failed to delete video:', err);
+            }
+        }
+        
+        loadVideos();
+        setInterval(loadVideos, 5000);
+    </script>
+</body>
+</html>
