@@ -1,4 +1,4 @@
-# AnveshAI — Programmatic Video Generator
+# AnveshAI — Video Generator V2
 
 A secure, production-safe programmatic video generator that uses AI to create animations from natural language descriptions. Simply describe what you want to see, and AnveshAI generates an MP4 video automatically.
 
